@@ -65,49 +65,25 @@ INSERT INTO Vendor(VendorId , StoreAddress) VALUES
 (1022, "847-357 Tempus Rd.,Birori,53858,OR"),
 (1028, "499-2828 Fames St.,Chiclayo,52294,KS");
 
-
-INSERT INTO CustomerAddress (CustomerId , Address)
+INSERT INTO CustomerAddress (CustomerAddressId, CustomerId, AddressLine1, AddressLine2, City, State, Zip, IsPrimary)
 VALUES
-  (1002, "571-3158 Odio St.,Oamaru,68781,NE"),
-  (1003, "329-3796 Dignissim Av.,21847,Maryland"),
-  (1005, "Ap #494-1561 Tristique St.,Villahermosa,87496,GA"),
-  (1006, "4712 Eget Road,Kielce,51066,Florida"),
-  (1009, "Ap #560-8564 Magna St.,Chuncheon,34167,Massachusetts"),
-  (1011,"Ap #351-6572 Quisque Avenue,Bungay,66314,Michigan"),
-  (1012, "Ap #567-9307 Cras St.,Tuxtla Gutiérrez,58951,CO"),
-  (1015 ,"5077 Dapibus Road,Pacoa,26514,TN"),
-  (1016 , "862-8684 Sem St.,Córdoba,64742,Colorado"),
-  (1017, "Ap #767-2742 Lacus. St.,Putre,81723,NV"),
-  (1018, "Ap #472-6006 Tincidunt, Road,Barranca,54418,Indiana"),
-  (1019, "767-3211 Leo. Ave,Paradise,66821,Alabama"),
-  (1021, "1574 Ipsum Ave,Saint Paul,73738,Utah"),
-  (1023, "Ap #395-3653 In St.,Metro,13818,Alabama"),
-  (1024, "379-3395 Nibh Street,Finspång,13636,Colorado"),
-  (1025, "100-3102 Et Rd.,Hamburg,43618,MD"),
-  (1026, "P.O. Box 383, 5652 Donec Road,Bida,76783,OR"),
-  (1027, "888-7653 Ultricies Rd.,Liaoning,92337,UT"),
-  (1029 , "596-9426 Mattis. St.,Chapra,41280,FL"),
-  (1030 ,"614-3821 Eu Street,Hebei,29565,KY");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  (1000, 1002, '123 Main St', '', 'Anytown', 'CA', '12345', 1),
+  (1001, 1003, '456 Oak Ave', '', 'Smallville', 'NY', '54321', 1),
+  (1002, 1005, '789 Pine St', '', 'Big City', 'IL', '67890', 1),
+  (1003, 1006, '10 Elm St', '', 'Metroville', 'TX', '98765', 1),
+  (1004, 1009, '555 Broad St', '', 'Downtown', 'MA', '13579', 1),
+  (1005, 1011, '444 Main St', '', 'City Central', 'CA', '56789', 1),
+  (1006, 1012, '888 Maple Ave', '', 'Riverdale', 'NJ', '24680', 1),
+  (1007, 1015, '777 Oak St', '', 'Newtown', 'CT', '97531', 1),
+  (1008, 1016, '222 Park Rd', '', 'Greenville', 'SC', '86420', 1),
+  (1009, 1017, '333 State St', '', 'Capital City', 'WA', '45678', 1),
+  (1010, 1018, '111 Forest Ave', '', 'Woodland', 'OR', '32145', 1),
+  (1011, 1019, '999 Oak Ln', '', 'Cityville', 'NY', '87654', 1),
+  (1012, 1021, '666 Elm St', '', 'Helltown', 'CA', '66666', 1),
+  (1013, 1023, '444 Maple St', '', 'Leafy Suburb', 'MA', '11111', 1),
+  (1014, 1024, '333 Main St', '', 'Smallville', 'IN', '22222', 1),
+  (1015, 1025, '777 High St', '', 'Mountain View', 'CA', '33333', 1),
+  (1016, 1026, '888 Broad Ave', '', 'Big City', 'NY', '44444', 1),
+  (1017, 1027, '555 First St', '', 'Sometown', 'TX', '55555', 1),
+  (1018, 1029, '111 State Ave', '', 'City Central', 'GA', '66666', 1),
+  (1019, 1030, '999 Ninth St', '', 'Ocean City', 'FL', '77777', 1);
