@@ -51,6 +51,11 @@ CREATE TABLE IF NOT EXISTS Subcategory (
 CREATE TABLE IF NOT EXISTS CustomerAddress (
 	CustomerAddressId INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	CustomerId INT UNSIGNED NOT NULL,
+	AddressLine1 VARCHAR(255),
+    AddressLine2 VARCHAR(255),
+    City VARCHAR(100),
+    State VARCHAR(100),
+    Zip VARCHAR(20),
     IsPrimary BOOL DEFAULT 0,
 	CONSTRAINT CustomerAddress_PK PRIMARY KEY (CustomerAddressId),
 	CONSTRAINT CustomerAddress_Customer_FK FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId) ON DELETE CASCADE ON UPDATE CASCADE
