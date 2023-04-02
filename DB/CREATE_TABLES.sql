@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS User
 	LName VARCHAR(100) NOT NULL,
 	CreateDate DATETIME NOT NULL,
 	AccountPassword VARCHAR(255) NOT NULL,
+	IsDeleted BOOL DEFAULT 0,
 	PRIMARY KEY (UserId)
 );
 
@@ -53,10 +54,11 @@ CREATE TABLE IF NOT EXISTS CustomerAddress (
 	CustomerId INT UNSIGNED NOT NULL,
 	AddressLine1 VARCHAR(255),
     AddressLine2 VARCHAR(255),
-    City VARCHAR(100),
+	City VARCHAR(100),
     State VARCHAR(100),
     Zip VARCHAR(20),
     IsPrimary BOOL DEFAULT 0,
+	IsDeleted BOOL DEFAULT 0,
 	CONSTRAINT CustomerAddress_PK PRIMARY KEY (CustomerAddressId),
 	CONSTRAINT CustomerAddress_Customer_FK FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -83,7 +85,7 @@ CREATE TABLE IF NOT EXISTS Product (
 	ProductId INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	ProductName VARCHAR(100) NOT NULL,
     ProductDescription VARCHAR(255) NOT NULL,
-    ImageUrl VARCHAR(255),
+    ImageUrl VARCHAR(255) NOT NULL DEFAULT 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=webp&v=1530129081',
     SubcategoryId INT UNSIGNED NOT NULL,
 	CONSTRAINT Product_PK PRIMARY KEY (ProductId),
 	CONSTRAINT Product_Subcategory_FK FOREIGN KEY (SubcategoryId) REFERENCES Subcategory(SubcategoryId) ON DELETE CASCADE ON UPDATE CASCADE
