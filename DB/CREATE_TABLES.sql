@@ -53,8 +53,6 @@ CREATE TABLE IF NOT EXISTS CustomerAddress (
 	CustomerId INT UNSIGNED NOT NULL,
 	AddressLine1 VARCHAR(255),
     AddressLine2 VARCHAR(255),
-    City VARCHAR(100),
-    State VARCHAR(100),
     Zip VARCHAR(20),
     IsPrimary BOOL DEFAULT 0,
 	CONSTRAINT CustomerAddress_PK PRIMARY KEY (CustomerAddressId),
