@@ -1,6 +1,6 @@
 USE EZCART;
 
-CREATE VIEW V_CustomerSelect AS
+CREATE OR REPLACE VIEW V_CustomerSelect AS
 SELECT
 	c.CustomerId,
     u.Email,
@@ -10,3 +10,4 @@ SELECT
 FROM
 	Customer c
     JOIN User u On u.UserId = c.CustomerId
+;
