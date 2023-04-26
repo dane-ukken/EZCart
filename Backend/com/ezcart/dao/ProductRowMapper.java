@@ -16,6 +16,7 @@ public class ProductRowMapper implements RowMapper<Product> {
 		p.setProductName(rs.getString("ProductName"));
 		p.setProductDesc(rs.getString("ProductDescription"));
 		p.setImageUrl(rs.getString("ImageUrl"));
+		p.setItempPrice(rs.getFloat("ItemPrice"));
 		return p;
 		
 	}
