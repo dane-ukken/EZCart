@@ -2,25 +2,6 @@ package com.ezcart.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.ezcart.dto.HttpMesgDTO;
-import com.ezcart.dto.UserDTO;
-import com.ezcart.pojos.CustomerCart;
-import com.ezcart.pojos.CustomerOrder;
-import com.ezcart.pojos.CustomerWishlist;
-import com.ezcart.pojos.User;
-import com.ezcart.service.IUserService;
-
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -32,6 +13,7 @@ public class UserController {
 	public ResponseEntity<?> getUserProfile(@RequestBody User u) {
 		System.out.println("IN CONTROLLER: " + u.getEmail() + " " + u.getAccountPassword());
 		UserDTO uRes = userService.getUserProfile(u.getEmail(), u.getAccountPassword());
+		
 		System.out.println("******** " + uRes);
 		if(uRes != null) {
 			return new ResponseEntity<UserDTO>(uRes, HttpStatus.OK);
@@ -39,8 +21,7 @@ public class UserController {
 		HttpMesgDTO h = new HttpMesgDTO();
 		h.setErrorMesg("Incorrect Email Id or password! Retry...");
 		h.setErrorCode(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
-		
+		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);	
 	}
 	
 	@PostMapping("/updateProfile/{id}")
@@ -103,7 +84,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/getOrders/{customerId}")
-	public ResponseEntity<?> addWishlist(@PathVariable int customerId) {
+	public ResponseEntity<?> getOrders(@PathVariable int customerId) {
 		System.out.println("IN CONTROLLER: " + customerId);
 		List<CustomerOrder> res = userService.getOrders(customerId);
 		HttpMesgDTO h = new HttpMesgDTO();
@@ -115,6 +96,39 @@ public class UserController {
 		h.setErrorCode(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
 	}
-
+	
+//	@PostMapping("/checkOut")
+//	// inserting in customerorder table and updating the payment table
+//	// reducing the quantity
+//	
+	
+	
+	@GetMapping("/getCart/{customerId}")
+	public ResponseEntity<?> getCart(@PathVariable int customerId) {
+		System.out.println("IN CONTROLLER: " + customerId);
+		List<CartWishlistDTO> res = userService.getCart(customerId);
+		HttpMesgDTO h = new HttpMesgDTO();
+		if(res.size()!=0) {
+			h.setSuccessCode(HttpStatus.OK);
+			return new ResponseEntity<List<CartWishlistDTO>>(res, HttpStatus.OK);
+		}
+//		h.setErrorMesg("");
+		h.setErrorCode(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/getWishlist/{customerId}")
+	public ResponseEntity<?> getWishlist(@PathVariable int customerId) {
+		System.out.println("IN CONTROLLER: " + customerId);
+		List<CartWishlistDTO> res = userService.getWishlist(customerId);
+		HttpMesgDTO h = new HttpMesgDTO();
+		if(res.size()!=0) {
+			h.setSuccessCode(HttpStatus.OK);
+			return new ResponseEntity<List<CartWishlistDTO>>(res, HttpStatus.OK);
+		}
+//		h.setErrorMesg("");
+		h.setErrorCode(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
+	}
 	 
 }
