@@ -45,5 +45,22 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> getSubcategoryByCategory(int categoryId) {
 		return prodDao.getSubcategoryByCategory(categoryId);
 	}
+	
+		@Override
+	public int addProduct(ProductDTO product) {
+		return prodDao.addProduct(product);
+	}
+
+
+	@Override
+	public int deleteProduct(int productId) {
+		return prodDao.deleteProduct(productId);
+	}
+
+
+	@Override
+	public int updateProduct(ProductDTO product) {
+		return prodDao.updateProduct(product);
+	}
 
 }
