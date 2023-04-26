@@ -15,5 +15,6 @@ public interface IProductDao {
 	public int deleteProduct(int productId);
 	public int updateProduct(ProductDTO product);
 	public int addVendorForNewProduct(ProductDTO product , int productId);
+	public List<ProductDetailsDTO> getProductById(int productId);
 	
 }
