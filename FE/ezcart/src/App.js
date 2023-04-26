@@ -7,6 +7,8 @@ import CartPage from "./pages/CartPage/CartPage";
 import SubCategoriesPage from "./pages/SubCategory/SubCategoriesPage";
 import ProductAlbum from "./components/ProductAlbum/ProductAlbum";
 import Product from "./components/ProductAlbum/Product";
+import AdminLogin from "./components/AdminLogin";
+import AdminHome from "./components/Admin/AdminHome";
 
 function App() {
 
@@ -18,8 +20,10 @@ function App() {
         <Route path="/" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/adminlogin" element={<AdminLogin/>} />
         <Route path="/cart" element={<CartPage/>} />
         <Route path="/home" element={<Home/>} />
+        <Route path="/adminhome" element={<AdminHome/>} />
         <Route path="/subcategory" element={<SubCategoriesPage/>} />
         <Route path="/product" element={<ProductAlbum/>} />
         <Route path="/productdetails" element={<Product/>} />
