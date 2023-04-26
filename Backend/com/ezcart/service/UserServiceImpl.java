@@ -49,4 +49,14 @@ public class UserServiceImpl implements IUserService {
 	public List<CustomerOrder> getOrders(int customerId) {
 		return userDao.getOrders(customerId);
 	}
+	
+	@Override
+	public List<CartWishlistDTO> getCart(int customerId) {
+		return userDao.getCart(customerId);
+	}
+	
+	@Override
+	public List<CartWishlistDTO> getWishlist(int customerId) {
+		return userDao.getWishlist(customerId);
+	}
 }
