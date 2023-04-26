@@ -16,5 +16,7 @@ public interface IUserDao {
 	int addProductToCart(CustomerCart cart);
 	int addProductToWishlist(CustomerWishlist wishlist);
 	public List<CustomerOrder> getOrders(int customerId);
+	public List<CartWishlistDTO> getCart(int customerId);
+	List<CartWishlistDTO> getWishlist(int customerId);
 	
 }
