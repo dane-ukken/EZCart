@@ -58,6 +58,7 @@ export default function ProductAlbum() {
       productId: i + 1,
       productName: "",
       productDesc: "",
+      productPrice: "",
     };
     emptyProductList.push(emptyProduct);
   }
@@ -67,7 +68,7 @@ export default function ProductAlbum() {
 
   useEffect(() => {
     // localhost:8080/ezcart/product/getProductList
-    fetch("https://run.mocky.io/v3/8aafd2d2-36f9-486a-8a3e-c479b8e420a3")
+    fetch("https://run.mocky.io/v3/eb527102-afc7-4d93-acc2-b147e060938b")
       .then((response) => response.json())
       .then((data) => {
         // Filter subcategories by categoryId
@@ -131,7 +132,7 @@ export default function ProductAlbum() {
               {products.map((product) => (
                 <Grid item key={product.productId} xs={12} sm={6} md={4}>
                   <LinkRouter
-                    to={`/productdetails?productId=${product.productId}`}
+                    to={`/productdetails?productId=${product.productId}&categoryName=${product.categoryName}&subCategoryName=${product.subCategoryName}&categoryId=${product.categoryId}&subCategoryId=${product.subCategoryId}`}
                     style={{ textDecoration: "none", cursor: "pointer" }}
                   >
                     <Card
@@ -156,9 +157,15 @@ export default function ProductAlbum() {
                         alt="random"
                       />
                       <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {product.productName}
-                        </Typography>
+                        <div className="product-album-main-row-container">
+                          <Typography gutterBottom variant="h6">
+                            {product.productName}
+                          </Typography>
+                          <Typography gutterBottom variant="subtitle1">
+                            {product.productPrice}
+                          </Typography>
+                        </div>
+
                         {/* <Typography>
                       This is a media card. You can use this section to describe the
                       content.
