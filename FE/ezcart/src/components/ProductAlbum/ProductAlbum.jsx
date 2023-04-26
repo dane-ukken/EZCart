@@ -15,10 +15,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useState, useEffect } from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import "./ProductAlbum.css";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import placeholderImage from "./loading.gif";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -65,6 +68,20 @@ export default function ProductAlbum() {
 
   const [products, setProducts] = useState(emptyProductList);
   const [isEmptyList, setIsEmptyList] = useState(false);
+  const [wishList, setIsInWishlist] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  function isInWishList(productId) {
+    const currentWishlist = localStorage.getItem("wishlist");
+    let wishlist = [];
+    if (currentWishlist) {
+      wishlist = JSON.parse(currentWishlist);
+    }
+    const existingProductIndex = wishlist.findIndex(
+      (p) => JSON.parse(p).productId === productId
+    );
+    return existingProductIndex !== -1;
+  }
 
   useEffect(() => {
     // localhost:8080/ezcart/product/getProductList
@@ -86,6 +103,75 @@ export default function ProductAlbum() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  function addToCart(product) {
+    const productCart = {
+      // imageUrl: placeholderImage,
+      productId: product.productId,
+      productName: product.productName,
+      productDesc: product.productDesc,
+      productPrice: product.productPrice,
+      quantity: 1,
+    };
+    const serializedProduct = JSON.stringify(productCart);
+    const currentCart = localStorage.getItem("cart");
+    let cartList = [];
+    if (currentCart) {
+      cartList = JSON.parse(currentCart);
+    }
+    const existingProductIndex = cartList.findIndex(
+      (p) => JSON.parse(p).productId === product.productId
+    );
+    if (existingProductIndex >= 0) {
+      const existingProduct = JSON.parse(cartList[existingProductIndex]);
+      existingProduct.quantity++;
+      cartList[existingProductIndex] = JSON.stringify(existingProduct);
+    } else {
+      cartList.push(serializedProduct);
+    }
+    localStorage.setItem("cart", JSON.stringify(cartList));
+    console.log(
+      `Added product ${
+        product.productId
+      } to cart. Cart contents: ${localStorage.getItem("cart")}`
+    );
+    setSnackbarOpen(true);
+  }
+
+  function handleSnackbarClose() {
+    setSnackbarOpen(false);
+  }
+
+  function addToWishList(product) {
+    const productWishlist = {
+      // imageUrl: placeholderImage,
+      productId: product.productId,
+      productName: product.productName,
+      productDesc: product.productDesc,
+      productPrice: product.productPrice,
+    };
+    const serializedProduct = JSON.stringify(productWishlist);
+    const currentWishlist = localStorage.getItem("wishlist");
+    let wishlist = [];
+    if (currentWishlist) {
+      wishlist = JSON.parse(currentWishlist);
+    }
+    const existingProductIndex = wishlist.findIndex(
+      (p) => JSON.parse(p).productId === product.productId
+    );
+    if (existingProductIndex === -1) {
+      wishlist.push(serializedProduct);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    } else {
+      wishlist.splice(existingProductIndex, 1);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }
+    setIsInWishlist(!wishList);
+  }
+
+  useEffect(() => {
+    setIsInWishlist(false);
+  }, [wishList]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -131,15 +217,19 @@ export default function ProductAlbum() {
             <Grid container spacing={4}>
               {products.map((product) => (
                 <Grid item key={product.productId} xs={12} sm={6} md={4}>
-                  <LinkRouter
-                    to={`/productdetails?productId=${product.productId}&categoryName=${product.categoryName}&subCategoryName=${product.subCategoryName}&categoryId=${product.categoryId}&subCategoryId=${product.subCategoryId}`}
-                    style={{ textDecoration: "none", cursor: "pointer" }}
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
                   >
-                    <Card
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
+                    <LinkRouter
+                      to={`/productdetails?productId=${product.productId}&categoryName=${product.categoryName}&subCategoryName=${product.subCategoryName}&categoryId=${product.categoryId}&subCategoryId=${product.subCategoryId}`}
+                      style={{
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        color: "InfoText",
                       }}
                     >
                       <CardMedia
@@ -165,24 +255,43 @@ export default function ProductAlbum() {
                             {product.productPrice}
                           </Typography>
                         </div>
-
-                        {/* <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
-                    </Typography> */}
                       </CardContent>
-                      <CardActions>
-                        <div className="product-album-actions-container">
-                          <div className="product-album-actions-left">
-                            <AddShoppingCartIcon />
-                          </div>
-                          <div className="product-album-actions-right">
-                            <FavoriteBorderIcon />
-                          </div>
+                    </LinkRouter>
+                    <CardActions>
+                      <div className="product-album-actions-container">
+                        <div
+                          className="product-album-actions-left"
+                          onClick={() => addToCart(product)}
+                        >
+                          <AddShoppingCartIcon />
                         </div>
-                      </CardActions>
-                    </Card>
-                  </LinkRouter>
+                        <div
+                          className="product-album-actions-right"
+                          onClick={() => addToWishList(product)}
+                        >
+                          {isInWishList(product.productId) ? (
+                            <FavoriteIcon />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
+                        </div>
+                      </div>
+                    </CardActions>
+                    <Snackbar
+                      open={snackbarOpen}
+                      autoHideDuration={2000}
+                      onClose={handleSnackbarClose}
+                      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    >
+                      <Alert
+                        onClose={handleSnackbarClose}
+                        severity="success"
+                        sx={{ width: "100%" }}
+                      >
+                        Product added to cart successfully!
+                      </Alert>
+                    </Snackbar>
+                  </Card>
                 </Grid>
               ))}
             </Grid>

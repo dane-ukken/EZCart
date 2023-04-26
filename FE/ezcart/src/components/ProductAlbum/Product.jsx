@@ -26,6 +26,7 @@ import "./Product.css";
 import placeholderImage from "./loading.gif";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function Copyright() {
@@ -68,7 +69,53 @@ export default function Product() {
   emptyProductList.push(emptyProduct);
 
   const [product, setProduct] = useState(emptyProductList[0]);
+  // const [qty, setQty] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  // const [isCarted, setIsCarted] = useState(false);
   const [isEmptyList, setIsEmptyList] = useState(false);
+
+  // useEffect(() => {
+  //   setIsCarted(isInCart(productId));
+  //   console.log(`isCarted: ${isCarted}`)
+  //   console.log(`qty: ${qty}`)
+  // }, [isCarted]);
+
+  function getQty(productId) {
+    const currentCart = localStorage.getItem("cart");
+    console.log(`current product: ${productId}`);
+    let cartList = [];
+    if (currentCart) {
+      cartList = JSON.parse(currentCart);
+    }
+    const existingProductIndex = cartList.findIndex(
+      (p) => parseInt(JSON.parse(p).productId) === parseInt(productId)
+    );
+    if (existingProductIndex >= 0) {
+      const existingProduct = JSON.parse(cartList[existingProductIndex]);
+      console.log(`existingProduct Qty: ${existingProduct.quantity}`);
+      return existingProduct.quantity;
+    } else {
+      console.log(`not found`);
+      return 1;
+    }
+  }
+
+  // useEffect(() => {
+  //   setIsWishlisted(isInWishList(productId));
+  //   console.log(`isWishlisted: ${isWishlisted}`)
+  // }, [isWishlisted]);
+
+  function isInWishList(productId) {
+    const currentWishlist = localStorage.getItem("wishlist");
+    let wishlist = [];
+    if (currentWishlist) {
+      wishlist = JSON.parse(currentWishlist);
+    }
+    const existingProductIndex = wishlist.findIndex(
+      (p) => parseInt(JSON.parse(p).productId) === parseInt(productId)
+    );
+    return existingProductIndex !== -1;
+  }
 
   useEffect(() => {
     // localhost:8080/ezcart/product/getProductListById/{productId}
@@ -93,6 +140,13 @@ export default function Product() {
         } else {
           setIsEmptyList(true);
         }
+        // setIsCarted(isInCart(productId));
+        // console.log(`isCarted: ${isInCart(productId)}`);
+        // console.log(`isCarted: ${isCarted}`)
+        // console.log(`qty: ${isCarted}`);
+
+        // setIsWishlisted(isInWishList(productId));
+        // console.log(`isWishlisted: ${isInWishList(productId)}`)
       })
       .catch((error) => console.error(error));
   }, []);
@@ -181,7 +235,7 @@ export default function Product() {
                     <TextField
                       type="number"
                       inputProps={{ min: 1 }}
-                      defaultValue={1}
+                      defaultValue={getQty(product.productId)}
                       variant="standard"
                       size="small"
                       sx={{ width: "50px", marginRight: "16px" }}
@@ -206,10 +260,21 @@ export default function Product() {
                       Add to Cart
                     </Button>
                     <div className="product-wishlist-container">
-                      <FavoriteBorderIcon sx={{ marginRight: "8px" }} />
-                      <Typography variant="body2" color="text.secondary">
-                        Add to Wishlist
-                      </Typography>
+                      {isInWishList(product.productId) ? (
+                        <>
+                          <FavoriteIcon sx={{ marginRight: "8px" }} />
+                          <Typography variant="body2" color="text.secondary">
+                            Remove from Wishlist
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <FavoriteBorderIcon sx={{ marginRight: "8px" }} />
+                          <Typography variant="body2" color="text.secondary">
+                            Add to Wishlist
+                          </Typography>
+                        </>
+                      )}
                     </div>
                   </Box>
                 </Box>
