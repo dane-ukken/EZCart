@@ -15,5 +15,7 @@ public interface IUserService {
 	int addProductCart(CustomerCart cart);
 	int addProductWishlist(CustomerWishlist wishlist);
 	public List<CustomerOrder> getOrders(int customerId);
+	public List<CartWishlistDTO> getCart(int customerId);
+	public List<CartWishlistDTO> getWishlist(int customerId);
 }
 
