@@ -29,7 +29,7 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public List<Product> getAllProducts() {
-		String getProductQuery = "select * from Product";
+		String getProductQuery = "select p.*, s.ItemPrice, s.Quantity  from Product p, productsupplies s where p.productid = s.productid;";
 		return jdbcTemplate.query(getProductQuery, new ProductRowMapper());
 	}
 
