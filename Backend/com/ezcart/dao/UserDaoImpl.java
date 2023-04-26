@@ -66,5 +66,27 @@ public class UserDaoImpl implements IUserDao {
 				+ "oi.orderId = (select orderId from customerorder where customerId = ?)" ;
 		return jdbcTemplate.query(getOrder , new CustomerOrderRowMapper(), customerId);
 	}
+	
+	@Override
+	public List<CartWishlistDTO> getCart(int customerId) {
+		SimpleJdbcCall procedureActor = new SimpleJdbcCall(jdbcTemplate)
+		        .withProcedureName("SP_SelectCustomerCart").declareParameters(new SqlParameter("inputId" , Types.INTEGER))   		        
+		        .returningResultSet("cart", new CartRowMapper());
+		System.out.println("IN DAO IMPL");
+		Map<String, Object> out = procedureActor.execute(customerId);		 
+		List<CartWishlistDTO> cartItems = (List<CartWishlistDTO>) out.get("cart");
+		return cartItems;
+	}
+	
+	@Override
+	public List<CartWishlistDTO> getWishlist(int customerId) {
+		SimpleJdbcCall procedureActor = new SimpleJdbcCall(jdbcTemplate)
+		        .withProcedureName("SP_SelectCustomerWishlist").declareParameters(new SqlParameter("inputId" , Types.INTEGER))   		        
+		        .returningResultSet("wishlist", new WishlistRowMapper());
+		System.out.println("IN DAO IMPL");
+		Map<String, Object> out = procedureActor.execute(customerId);		 
+		List<CartWishlistDTO> wishlistItems = (List<CartWishlistDTO>) out.get("wishlist");
+		return wishlistItems;
+	}
 
 }
