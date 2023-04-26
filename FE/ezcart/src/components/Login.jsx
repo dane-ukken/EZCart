@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +11,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 function Copyright(props) {
   return (
@@ -29,14 +31,66 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState([]);
+
+  useEffect(() => {
+    let ignore = false;
+    setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
+    return () => {
+      ignore = true;
+    };
+  }, []);
+  if(currentUser !== undefined && currentUser !== null){
+    navigate('/home');
+  }
+
+  function handleSignupClick() {
+    navigate('/signup');
+  }
+
+  function handleAdminLoginClick() {
+    navigate('/adminlogin')
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+
+
+/*     axios.post('http://localhost:8080/ezcart/user/getProfile', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      localStorage.setItem('currentUser', JSON.stringify(response.data));
+      console.log(response.data);
+      setCurrentUser(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    }); */
+    
+
+    axios.get('https://644932ade7eb3378ca42753e.mockapi.io/login')
+    .then(response => {
+      localStorage.setItem('currentUser', JSON.stringify(response.data));
+      console.log(response.data);
+      setCurrentUser(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
   };
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -107,12 +161,12 @@ export default function Login() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
+                  <Link href="#" variant="body2" onClick={handleAdminLoginClick}>
+                    Admin Login
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="#" onClick={handleSignupClick}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
