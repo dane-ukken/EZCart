@@ -92,4 +92,16 @@ public class ProductController {
 		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
 		
 	}
+	@GetMapping("/getProductById/{productId}")
+	public ResponseEntity<?> getProductById(@PathVariable int productId) {
+		System.out.println("IN CONTROLLER: "  + productId);
+		List<ProductDetailsDTO> prodList = prodService.getProductById(productId);
+		if(prodList.size() != 0) {
+			return new ResponseEntity<List<ProductDetailsDTO>>(prodList, HttpStatus.OK);
+		}
+		HttpMesgDTO h = new HttpMesgDTO();
+		h.setErrorMesg("Products coming soon under this segment.... :)");
+		h.setErrorCode(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<HttpMesgDTO>(h, HttpStatus.BAD_REQUEST);
+	}
 }
