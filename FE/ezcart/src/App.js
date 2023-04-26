@@ -9,6 +9,7 @@ import ProductAlbum from "./components/ProductAlbum/ProductAlbum";
 import Product from "./components/ProductAlbum/Product";
 import AdminLogin from "./components/AdminLogin";
 import AdminHome from "./components/Admin/AdminHome";
+import AddProduct from "./components/Admin/AddProduct";
 
 function App() {
 
@@ -21,6 +22,8 @@ function App() {
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/adminlogin" element={<AdminLogin/>} />
+        <Route path="/addproduct" element={<AddProduct/>} />
+        <Route path="/removeproduct" element={<AdminLogin/>} />
         <Route path="/cart" element={<CartPage/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/adminhome" element={<AdminHome/>} />

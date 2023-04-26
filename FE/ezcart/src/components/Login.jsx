@@ -62,19 +62,21 @@ export default function Login() {
       password: data.get('password'),
     });
 
-    /*
-    axios.post(url, data, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+
+/*     axios.post('http://localhost:8080/ezcart/user/getProfile', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     .then(response => {
+      localStorage.setItem('currentUser', JSON.stringify(response.data));
       console.log(response.data);
+      setCurrentUser(response.data);
     })
     .catch(error => {
       console.error(error);
-    });
-    */
+    }); */
+    
 
     axios.get('https://644932ade7eb3378ca42753e.mockapi.io/login')
     .then(response => {
