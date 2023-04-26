@@ -82,6 +82,24 @@ public class ProductDaoImpl implements IProductDao {
 				product.getQuantity(), product.getItemPrice());
 	}
 	
+	@Override
+	public List<ProductDetailsDTO> getProductById(int productId) {
+		String getProductDetails = "select p.* , s.subcategoryName, c.categoryId, c.categoryName, ps.ItemPrice from product p, subcategory s, category c, productSupplies ps where " 
+				  + " ps.ProductId = p.productId and p.subcategoryId = s.subcategoryid and s.categoryId = c.categoryId and p.productId= ?" ;
+		List<ProductDetailsDTO> detailsList = jdbcTemplate.query(getProductDetails, new DetailsWrapper() , productId );
+		
+		String getVendor = "select u.Fname, u.Lname from productSupplies ps , "
+				+ "user u where ps.VendorId = u.userId and ps.productId =?";
+		
+		List<UserDTO> vendorName = jdbcTemplate.query(getVendor, new VendorNameWrapper() , productId);
+		
+		for (int i = 0; i < detailsList.size(); i++) {
+			detailsList.get(i).setVendorName(vendorName.get(i));
+		}
+		
+
+		return detailsList;
+	}
 	
 	
 
