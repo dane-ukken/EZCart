@@ -10,6 +10,8 @@ public class Product {
 	private String subCategoryName;
 	private int categoryId;
 	public String categoryName;
+	public float itempPrice;
+	public int Quantity;
 	
 	public int getProductId() {
 		return productId;
@@ -59,11 +61,23 @@ public class Product {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	public float getItempPrice() {
+		return itempPrice;
+	}
+	public void setItempPrice(float itempPrice) {
+		this.itempPrice = itempPrice;
+	}
+	public int getQuantity() {
+		return Quantity;
+	}
+	public void setQuantity(int quantity) {
+		Quantity = quantity;
+	}
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", productDesc=" + productDesc
 				+ ", imageUrl=" + imageUrl + ", subCategoryId=" + subCategoryId + ", subCategoryName=" + subCategoryName
-				+ ", categoryId=" + categoryId + ", categoryName=" + categoryName + "]";
+				+ ", categoryId=" + categoryId + ", categoryName=" + categoryName + ", itempPrice=" + itempPrice + "]";
 	}
 	
 	
