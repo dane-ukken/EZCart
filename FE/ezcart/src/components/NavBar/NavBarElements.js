@@ -14,16 +14,25 @@ z-index: 12;
 `;
 
 export const NavLink = styled(Link)`
-color: #808080;
+color: #000000;
 display: flex;
 align-items: center;
 text-decoration: none;
-padding: 0 1rem;
-height: 100%;
+padding: 0 1.5rem;
+height: 55%;
 cursor: pointer;
-&.active {
-	color: #000000;
+border-radius: 4px;
+margin: auto 30px;
+&:hover {
+	transition: all 0.2s ease-in-out;
+	background: #fff;
+	color: #808080;
 }
+&.active {
+	color: #ffffff;
+	background-color: #000000;
+}
+
 `;
 
 export const Bars = styled(FaBars)`
@@ -61,6 +70,7 @@ margin-right: 24px;
 /* Third Nav */
 /* justify-content: flex-end;
 width: 100vw; */
+
 @media screen and (max-width: 768px) {
 	display: none;
 }
@@ -68,7 +78,7 @@ width: 100vw; */
 
 export const NavBtnLink = styled(Link)`
 border-radius: 4px;
-background: #808080;
+// background: #808080;
 padding: 10px 22px;
 color: #000000;
 outline: none;
@@ -82,5 +92,9 @@ margin-left: 24px;
 	transition: all 0.2s ease-in-out;
 	background: #fff;
 	color: #808080;
+}
+&.active {
+	color: #ffffff;
+	background-color: #000000;
 }
 `;

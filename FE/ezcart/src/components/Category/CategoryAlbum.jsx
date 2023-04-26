@@ -1,39 +1,61 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import CameraIcon from "@mui/icons-material/PhotoCamera";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import { Link as LinkRouter } from "react-router-dom";
+
+import placeholderImage from "./loading.gif";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         EZcart
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 const theme = createTheme();
 
 export default function CategoryAlbum() {
+  let emptyCategoryList = [];
+  for (let i = 0; i < 3; i++) {
+    const emptyCategory = {
+      categoryId: i + 1,
+      categoryName: "",
+      imageUrl: placeholderImage,
+    };
+    emptyCategoryList.push(emptyCategory);
+  }
+
+  const [categories, setCategories] = useState(emptyCategoryList);
+
+  useEffect(() => {
+    // localhost:8080/ezcart/product/getProductCategoryList
+    fetch("https://run.mocky.io/v3/bb66bfc6-b37a-408d-931b-57dd9cb0da79")
+      .then((response) => response.json())
+      .then((data) => setCategories(data))
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -41,7 +63,7 @@ export default function CategoryAlbum() {
         {/* Hero unit */}
         <Box
           sx={{
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             pt: 8,
             pb: 6,
           }}
@@ -56,7 +78,12 @@ export default function CategoryAlbum() {
             >
               Shop in Categories
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               Least time, Best value
             </Typography>
           </Container>
@@ -64,41 +91,47 @@ export default function CategoryAlbum() {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+            {categories.map((category) => (
+              <Grid item key={category.categoryId} xs={12} sm={6} md={4}>
+                <LinkRouter
+                  to={`/subcategory?categoryId=${category.categoryId}&categoryName=${category.categoryName}`}
+                  style={{ textDecoration: "none", cursor: "pointer" }}
                 >
-                  <CardMedia
-                    component="img"
+                  <Card
                     sx={{
-                      // 16:9
-                      pt: '56.25%',
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
-                    image="https://source.unsplash.com/random"
-                    alt="random"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
-                    </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">View</Button>
-                    <Button size="small">Edit</Button>
-                  </CardActions>
-                </Card>
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        // 16:9
+                        // pt: '56.25%',
+                        aspectRatio: "1/1",
+                      }}
+                      image={
+                        category.imageUrl
+                          ? category.imageUrl
+                          : "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
+                      }
+                      alt="random"
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {category.categoryName}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </LinkRouter>
               </Grid>
             ))}
           </Grid>
         </Container>
       </main>
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Best prices, Happy faces
         </Typography>

@@ -18,8 +18,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import "./ProductAlbum.css";
 
 import placeholderImage from "./loading.gif";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function Copyright() {
   return (
@@ -36,39 +39,46 @@ function Copyright() {
 
 const theme = createTheme();
 
-export default function SubCategoryAlbum() {
+export default function ProductAlbum() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryId = searchParams.get("categoryId");
   const categoryName = searchParams.get("categoryName");
+  const subCategoryId = searchParams.get("subCategoryId");
+  const subCategoryName = searchParams.get("subCategoryName");
 
-  let emptySubCategoryList = [];
+  let emptyProductList = [];
   for (let i = 0; i < 3; i++) {
-    const emptySubCategory = {
+    const emptyProduct = {
       categoryId: categoryId,
       categoryName: categoryName,
-      subCategoryId: i + 1,
-      subCategoryName: "",
+      subCategoryId: subCategoryId,
+      subCategoryName: subCategoryName,
       imageUrl: placeholderImage,
+      productId: i + 1,
+      productName: "",
+      productDesc: "",
     };
-    emptySubCategoryList.push(emptySubCategory);
+    emptyProductList.push(emptyProduct);
   }
 
-  const [subCategories, setSubCategories] = useState(emptySubCategoryList);
+  const [products, setProducts] = useState(emptyProductList);
   const [isEmptyList, setIsEmptyList] = useState(false);
 
   useEffect(() => {
-    // localhost:8080/ezcart/product/getProductSubCategoryList
-    fetch("https://run.mocky.io/v3/ce3c1a33-3603-4c69-9f64-8aac384baf01")
+    // localhost:8080/ezcart/product/getProductList
+    fetch("https://run.mocky.io/v3/8aafd2d2-36f9-486a-8a3e-c479b8e420a3")
       .then((response) => response.json())
       .then((data) => {
         // Filter subcategories by categoryId
-        const filteredSubCategories = data.filter(
-          (subCategory) => subCategory.categoryId === Number(categoryId)
-        );
+        const filteredProducts = data.filter((product) => {
+          return (
+            parseInt(product.categoryId) === parseInt(categoryId) &&
+            parseInt(product.subCategoryId) === parseInt(subCategoryId)
+          );
+        });
         // Update state with filtered subcategories
-        if (filteredSubCategories.length != 0)
-          setSubCategories(filteredSubCategories);
+        if (filteredProducts.length != 0) setProducts(filteredProducts);
         else {
           setIsEmptyList(true);
         }
@@ -90,14 +100,13 @@ export default function SubCategoryAlbum() {
         >
           <Container maxWidth="sm">
             <Typography
-              component="h3"
-              variant="h3"
+              component="h1"
+              variant="h2"
               align="center"
               color="text.primary"
               gutterBottom
             >
-              {/* {`Category > ${categoryName}`} */}
-              {`Category > ${categoryName}`}
+              {subCategoryName}
             </Typography>
             <Typography
               variant="h5"
@@ -119,16 +128,10 @@ export default function SubCategoryAlbum() {
             </Box>
           ) : (
             <Grid container spacing={4}>
-              {subCategories.map((subCategory) => (
-                <Grid
-                  item
-                  key={subCategory.subCategoryId}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                >
+              {products.map((product) => (
+                <Grid item key={product.productId} xs={12} sm={6} md={4}>
                   <LinkRouter
-                    to={`/product?subCategoryId=${subCategory.subCategoryId}&subCategoryName=${subCategory.subCategoryName}&categoryId=${subCategory.categoryId}&categoryName=${subCategory.categoryName}`}
+                    to={`/productdetails?productId=${product.productId}`}
                     style={{ textDecoration: "none", cursor: "pointer" }}
                   >
                     <Card
@@ -146,17 +149,31 @@ export default function SubCategoryAlbum() {
                           aspectRatio: "1/1",
                         }}
                         image={
-                          subCategory.imageUrl
-                            ? subCategory.imageUrl
+                          product.imageUrl
+                            ? product.imageUrl
                             : "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
                         }
                         alt="random"
                       />
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Typography gutterBottom variant="h5" component="h2">
-                          {subCategory.subCategoryName}
+                          {product.productName}
                         </Typography>
+                        {/* <Typography>
+                      This is a media card. You can use this section to describe the
+                      content.
+                    </Typography> */}
                       </CardContent>
+                      <CardActions>
+                        <div className="product-album-actions-container">
+                          <div className="product-album-actions-left">
+                            <AddShoppingCartIcon />
+                          </div>
+                          <div className="product-album-actions-right">
+                            <FavoriteBorderIcon />
+                          </div>
+                        </div>
+                      </CardActions>
                     </Card>
                   </LinkRouter>
                 </Grid>

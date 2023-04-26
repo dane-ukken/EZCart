@@ -1,0 +1,12 @@
+.product-album-actions-container {
+    display: flex;
+    padding: 0 16px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.product-album-actions-left {
+}
+
+.product-album-actions-right {
+}

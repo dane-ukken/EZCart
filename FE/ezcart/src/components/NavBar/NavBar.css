@@ -1,0 +1,9 @@
+.nav-container-left {
+    display: flex;
+    justify-content: left;
+}
+
+.nav-container-right {
+    display: flex;
+    justify-content: right;
+}
