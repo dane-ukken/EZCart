@@ -7,6 +7,7 @@ import CartPage from "./pages/CartPage/CartPage";
 import SubCategoriesPage from "./pages/SubCategory/SubCategoriesPage";
 import ProductAlbum from "./components/ProductAlbum/ProductAlbum";
 import Product from "./components/ProductAlbum/Product";
+import Checkout from "./components/Cart/Checkout";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/subcategory" element={<SubCategoriesPage/>} />
         <Route path="/product" element={<ProductAlbum/>} />
         <Route path="/productdetails" element={<Product/>} />
+        <Route path="/checkout" element={<Checkout/>} />
       </Routes>
     </Router>
     </div>

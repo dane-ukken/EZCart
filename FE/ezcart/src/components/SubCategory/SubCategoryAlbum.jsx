@@ -58,8 +58,7 @@ export default function SubCategoryAlbum() {
   const [isEmptyList, setIsEmptyList] = useState(false);
 
   useEffect(() => {
-    // localhost:8080/ezcart/product/getProductSubCategoryList
-    fetch("https://run.mocky.io/v3/ce3c1a33-3603-4c69-9f64-8aac384baf01")
+    fetch("http://localhost:8080/ezcart/product/getProductSubCategoryList")
       .then((response) => response.json())
       .then((data) => {
         // Filter subcategories by categoryId

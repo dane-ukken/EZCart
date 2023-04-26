@@ -22,6 +22,8 @@ import { Link as LinkRouter } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Product.css";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import placeholderImage from "./loading.gif";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -63,22 +65,22 @@ export default function Product() {
     productId: productId,
     productName: "",
     productDesc: "",
-    productPrice: "",
+    itempPrice: "",
     imageUrl: placeholderImage,
   };
   emptyProductList.push(emptyProduct);
 
   const [product, setProduct] = useState(emptyProductList[0]);
-  // const [qty, setQty] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  // const [isCarted, setIsCarted] = useState(false);
   const [isEmptyList, setIsEmptyList] = useState(false);
+  const [wishList, setIsInWishlist] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [displayQty, setDisplayQty] = useState(getQty(product.productId));
 
-  // useEffect(() => {
-  //   setIsCarted(isInCart(productId));
-  //   console.log(`isCarted: ${isCarted}`)
-  //   console.log(`qty: ${qty}`)
-  // }, [isCarted]);
+  function handleQuantityChange(val) {
+    console.log(val);
+    setDisplayQty(val);
+  }
 
   function getQty(productId) {
     const currentCart = localStorage.getItem("cart");
@@ -100,11 +102,6 @@ export default function Product() {
     }
   }
 
-  // useEffect(() => {
-  //   setIsWishlisted(isInWishList(productId));
-  //   console.log(`isWishlisted: ${isWishlisted}`)
-  // }, [isWishlisted]);
-
   function isInWishList(productId) {
     const currentWishlist = localStorage.getItem("wishlist");
     let wishlist = [];
@@ -117,36 +114,94 @@ export default function Product() {
     return existingProductIndex !== -1;
   }
 
+  function addToCart(product) {
+    const productCart = {
+      // imageUrl: placeholderImage,
+      productId: product.productId,
+      productName: product.productName,
+      productDesc: product.productDesc,
+      itempPrice: product.itempPrice,
+      quantity: parseInt(displayQty),
+    };
+    const serializedProduct = JSON.stringify(productCart);
+    const currentCart = localStorage.getItem("cart");
+    let cartList = [];
+    if (currentCart) {
+      cartList = JSON.parse(currentCart);
+    }
+    const existingProductIndex = cartList.findIndex(
+      (p) => JSON.parse(p).productId === product.productId
+    );
+    if (existingProductIndex >= 0) {
+      const existingProduct = JSON.parse(cartList[existingProductIndex]);
+      console.log(parseInt(displayQty));
+      existingProduct.quantity = parseInt(displayQty);
+      cartList[existingProductIndex] = JSON.stringify(existingProduct);
+    } else {
+      cartList.push(serializedProduct);
+    }
+    localStorage.setItem("cart", JSON.stringify(cartList));
+    console.log(
+      `Added product ${
+        product.productId
+      } to cart. Cart contents: ${localStorage.getItem("cart")}`
+    );
+    setSnackbarOpen(true);
+  }
+
+  function handleSnackbarClose() {
+    setSnackbarOpen(false);
+  }
+
+  function addToWishList(product) {
+    const productWishlist = {
+      // imageUrl: placeholderImage,
+      productId: product.productId,
+      productName: product.productName,
+      productDesc: product.productDesc,
+      itempPrice: product.itempPrice,
+    };
+    const serializedProduct = JSON.stringify(productWishlist);
+    const currentWishlist = localStorage.getItem("wishlist");
+    let wishlist = [];
+    if (currentWishlist) {
+      wishlist = JSON.parse(currentWishlist);
+    }
+    const existingProductIndex = wishlist.findIndex(
+      (p) => JSON.parse(p).productId === product.productId
+    );
+    if (existingProductIndex === -1) {
+      wishlist.push(serializedProduct);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    } else {
+      wishlist.splice(existingProductIndex, 1);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }
+    setIsInWishlist(!wishList);
+  }
+
+  useEffect(() => {
+    setIsInWishlist(false);
+  }, [wishList]);
+
   useEffect(() => {
     // localhost:8080/ezcart/product/getProductListById/{productId}
-    fetch("https://run.mocky.io/v3/eb527102-afc7-4d93-acc2-b147e060938b")
+    fetch(`http://localhost:8080/ezcart/product/getProductById/${productId}`)
       .then((response) => response.json())
       .then((data) => {
-        // Filter
-        const filteredProducts = data.filter((product) => {
-          return (
-            parseInt(product.categoryId) === parseInt(categoryId) &&
-            parseInt(product.subCategoryId) === parseInt(subCategoryId) &&
-            parseInt(product.productId) === parseInt(productId)
-          );
-        });
         // Sort filtered products by price (ascending order)
-        const sortedProducts = filteredProducts.sort((a, b) => {
-          return parseFloat(a.productPrice) - parseFloat(b.productPrice);
+        const sortedProducts = data.sort((a, b) => {
+          return (
+            parseFloat(a.productDetails.productPrice) -
+            parseFloat(b.productDetails.productPrice)
+          );
         });
         // Update state with filtered subcategories
         if (sortedProducts.length != 0) {
-          setProduct(sortedProducts[0]);
+          setProduct(sortedProducts[0].productDetails);
         } else {
           setIsEmptyList(true);
         }
-        // setIsCarted(isInCart(productId));
-        // console.log(`isCarted: ${isInCart(productId)}`);
-        // console.log(`isCarted: ${isCarted}`)
-        // console.log(`qty: ${isCarted}`);
-
-        // setIsWishlisted(isInWishList(productId));
-        // console.log(`isWishlisted: ${isInWishList(productId)}`)
       })
       .catch((error) => console.error(error));
   }, []);
@@ -173,7 +228,7 @@ export default function Product() {
                 startIcon={<ArrowBackIcon />}
                 sx={{ color: "success.main", borderColor: "success.main" }}
               >
-                {`${product.subCategoryName}`}
+                {`${subCategoryName}`}
               </Button>
             </Container>
 
@@ -198,9 +253,7 @@ export default function Product() {
                         objectFit: "cover",
                       }}
                       image={
-                        product.imageUrl
-                          ? product.imageUrl
-                          : "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
+                        "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
                       }
                       alt="random"
                     />
@@ -215,7 +268,7 @@ export default function Product() {
                     {product.productName}
                   </Typography>
                   <Typography variant="h5" sx={{ color: "#383838" }}>
-                    {product.productPrice}
+                    ${product.itempPrice}
                   </Typography>
                   <Box
                     sx={{
@@ -239,6 +292,7 @@ export default function Product() {
                       variant="standard"
                       size="small"
                       sx={{ width: "50px", marginRight: "16px" }}
+                      onChange={(e) => handleQuantityChange(e.target.value)}
                     />
                   </Box>
                   <Typography variant="subtitle1">
@@ -252,14 +306,30 @@ export default function Product() {
                       marginTop: "50px",
                     }}
                   >
-                    <Button
-                      variant="contained"
-                      color="success"
-                      sx={{ marginRight: "16px" }}
+                    {getQty(product.productId) > 1 ? (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        sx={{ marginRight: "16px" }}
+                        onClick={() => addToCart(product)}
+                      >
+                        Update Cart
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        sx={{ marginRight: "16px" }}
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart
+                      </Button>
+                    )}
+
+                    <div
+                      className="product-wishlist-container"
+                      onClick={() => addToWishList(product)}
                     >
-                      Add to Cart
-                    </Button>
-                    <div className="product-wishlist-container">
                       {isInWishList(product.productId) ? (
                         <>
                           <FavoriteIcon sx={{ marginRight: "8px" }} />
@@ -276,6 +346,20 @@ export default function Product() {
                         </>
                       )}
                     </div>
+                    <Snackbar
+                      open={snackbarOpen}
+                      autoHideDuration={2000}
+                      onClose={handleSnackbarClose}
+                      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    >
+                      <Alert
+                        onClose={handleSnackbarClose}
+                        severity="success"
+                        sx={{ width: "100%" }}
+                      >
+                        Cart updated successfully!
+                      </Alert>
+                    </Snackbar>
                   </Box>
                 </Box>
               </Box>

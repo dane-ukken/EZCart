@@ -61,7 +61,7 @@ export default function ProductAlbum() {
       productId: i + 1,
       productName: "",
       productDesc: "",
-      productPrice: "",
+      itempPrice: "",
     };
     emptyProductList.push(emptyProduct);
   }
@@ -84,19 +84,23 @@ export default function ProductAlbum() {
   }
 
   useEffect(() => {
-    // localhost:8080/ezcart/product/getProductList
-    fetch("https://run.mocky.io/v3/eb527102-afc7-4d93-acc2-b147e060938b")
+    fetch("http://localhost:8080/ezcart/product/getProductList")
       .then((response) => response.json())
       .then((data) => {
-        // Filter subcategories by categoryId
-        const filteredProducts = data.filter((product) => {
-          return (
-            parseInt(product.categoryId) === parseInt(categoryId) &&
-            parseInt(product.subCategoryId) === parseInt(subCategoryId)
-          );
-        });
-        // Update state with filtered subcategories
-        if (filteredProducts.length != 0) setProducts(filteredProducts);
+        let productList = [];
+        for (let i = 0; i < data.length; i++) {
+          if (
+            data[i].categoryId === categoryId &&
+            data[i].subCategoryId === subCategoryId
+          ) {
+            data[i].imageUrl = "";
+            data[i].categoryName = categoryName;
+            data[i].subCategoryName = subCategoryName;
+            productList.push(data[i]);
+          }
+        }
+        // if (productList.length != 0) setProducts(productList);
+        if (data.length != 0) setProducts(data);
         else {
           setIsEmptyList(true);
         }
@@ -110,7 +114,7 @@ export default function ProductAlbum() {
       productId: product.productId,
       productName: product.productName,
       productDesc: product.productDesc,
-      productPrice: product.productPrice,
+      itempPrice: product.itempPrice,
       quantity: 1,
     };
     const serializedProduct = JSON.stringify(productCart);
@@ -148,7 +152,7 @@ export default function ProductAlbum() {
       productId: product.productId,
       productName: product.productName,
       productDesc: product.productDesc,
-      productPrice: product.productPrice,
+      itempPrice: product.itempPrice,
     };
     const serializedProduct = JSON.stringify(productWishlist);
     const currentWishlist = localStorage.getItem("wishlist");
@@ -240,9 +244,7 @@ export default function ProductAlbum() {
                           aspectRatio: "1/1",
                         }}
                         image={
-                          product.imageUrl
-                            ? product.imageUrl
-                            : "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
+                          "https://www.thinkwithgoogle.com/_qs/static/img/icons/data-points/consumer_goods.svg"
                         }
                         alt="random"
                       />
@@ -252,7 +254,7 @@ export default function ProductAlbum() {
                             {product.productName}
                           </Typography>
                           <Typography gutterBottom variant="subtitle1">
-                            {product.productPrice}
+                            ${product.itempPrice}
                           </Typography>
                         </div>
                       </CardContent>

@@ -49,8 +49,7 @@ export default function CategoryAlbum() {
   const [categories, setCategories] = useState(emptyCategoryList);
 
   useEffect(() => {
-    // localhost:8080/ezcart/product/getProductCategoryList
-    fetch("https://run.mocky.io/v3/bb66bfc6-b37a-408d-931b-57dd9cb0da79")
+    fetch("http://localhost:8080/ezcart/product/getProductCategoryList")
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error(error));
